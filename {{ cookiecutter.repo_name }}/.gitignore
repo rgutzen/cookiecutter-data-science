@@ -1,5 +1,15 @@
 # Data
 /data/
+/data/*
+
+# snakemake logs
+.snakemake
+
+# dataframes
+*.csv
+
+# hidden files
+.*
 
 # Mac OS-specific storage files
 .DS_Store

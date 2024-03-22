@@ -43,3 +43,13 @@ ccds = "ccds.__main__:main"
 "Source Code" = "https://github.com/drivendata/cookiecutter-data-science/"
 "Bug Tracker" = "https://github.com/drivendata/cookiecutter-data-science/issues"
 "DrivenData" = "https://drivendata.co"
+
+[tool.black]
+line-length = 80
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+)/
+'''

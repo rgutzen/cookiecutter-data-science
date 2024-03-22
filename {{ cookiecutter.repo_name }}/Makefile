@@ -3,8 +3,12 @@
 #################################################################################
 
 PROJECT_NAME = {{ cookiecutter.repo_name }}
+PROJECT_ABRV = {{ cookiecutter.repo_name }}
 PYTHON_VERSION = {{ cookiecutter.python_version_number }}
 PYTHON_INTERPRETER = python
+USERNAME = {{ cookiecutter.user_name }}
+PROXY_HOST = 
+CLUSTER_HOST = 
 
 #################################################################################
 # COMMANDS                                                                      #
@@ -26,10 +30,42 @@ requirements:
 
 
 ## Delete all compiled Python files
-.PHONY: clean
-clean:
+.PHONY: clean_py
+clean_py:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
+
+## Delete all snakemake logs
+.PHONY: clean_snakemake
+clean_snakemake:
+	find . -type d -name ".snakemake" -exec rm -rv {} +
+
+## Delete all slurm logs
+.PHONY: clean_slurm
+clean_slurm:
+		find . -type f -name "*.err" -exec rm -rv {} +
+		find . -type f -name "*.out" -exec rm -rv {} +
+
+
+## Sync code to cluster
+.PHONY: sync_code
+sync_code:
+	rsync -va \
+			  --exclude-from='.gitignore' \
+			  --prune-empty-dirs --copy-links \
+			  -e "ssh -i ~/.ssh/id_rsa -A ${USERNAME}@${PROXY_HOST} ssh" \
+			  ./ \
+              '${USERNAME}@${CLUSTER_HOST}:~/${PROJECT_NAME}/'
+
+## Sync data to local
+.PHONY: sync_data
+sync_data:
+	rsync -va --include='*/' \
+              --exclude='*' --prune-empty-dirs --copy-links \
+			  -e "ssh -i ~/.ssh/id_rsa -A ${USERNAME}@${PROXY_HOST} ssh" \
+              '${USERNAME}@${CLUSTER_HOST}:~/${PROJECT_NAME}/reports/' \
+			  ./reports/
+
 
 ## Lint using flake8 and black (use `make format` to do formatting)
 .PHONY: lint

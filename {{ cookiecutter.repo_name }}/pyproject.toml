@@ -18,7 +18,7 @@ classifiers = [
 requires-python = "~={{ cookiecutter.python_version_number }}"
 
 [tool.black]
-line-length = 99
+line-length = 87
 include = '\.pyi?$'
 exclude = '''
 /(

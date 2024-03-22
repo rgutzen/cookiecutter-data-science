@@ -36,8 +36,14 @@ def config_generator(fast=False):
             ("environment_manager", opt)
             for opt in cookiecutter_json["environment_manager"]
         ],
-        [("dependency_file", opt) for opt in cookiecutter_json["dependency_file"]],
-        [("pydata_packages", opt) for opt in cookiecutter_json["pydata_packages"]],
+        [
+            ("dependency_file", opt)
+            for opt in cookiecutter_json["dependency_file"]
+        ],
+        [
+            ("pydata_packages", opt)
+            for opt in cookiecutter_json["pydata_packages"]
+        ],
     )
 
     def _is_valid(config):

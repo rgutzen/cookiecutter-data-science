@@ -2,7 +2,9 @@
     "project_name": "project_name",
     "repo_name": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
     "module_name": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+    "short_name": "{{ cookiecutter.module_name.split('_') | map(attribute='0') | join('') }}",
     "author_name": "Your name (or your organization/company/team)",
+    "user_name": "{{ cookiecutter.author_name }}",
     "description": "A short description of the project.",
     "python_version_number": "3.10",
     "dataset_storage": [

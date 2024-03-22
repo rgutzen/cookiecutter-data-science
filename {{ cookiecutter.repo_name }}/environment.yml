@@ -1,0 +1,23 @@
+name: {{ cookiecutter.short_name }}
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - ipython
+  - jupyterlab
+  - matplotlib
+  - seaborn
+  - pandas >= 1.2.0
+  - scikit-learn
+  - pytorch
+  - torchvision
+  - opencv
+  - tqdm
+  - pip:
+    - snakemake >= 7.30.0
+    - pulp <= 2.8.0  # snakemake issue #2607
+    - python-dotenv
+    - mkdocs
+    - -e .
