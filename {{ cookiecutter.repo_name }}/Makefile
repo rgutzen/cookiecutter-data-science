@@ -8,7 +8,8 @@ PYTHON_VERSION = {{ cookiecutter.python_version_number }}
 PYTHON_INTERPRETER = python
 USERNAME = {{ cookiecutter.user_name }}
 PROXY_HOST = 
-CLUSTER_HOST = 
+CLUSTER_HOST =
+
 
 #################################################################################
 # COMMANDS                                                                      #
@@ -53,18 +54,19 @@ sync_code:
 	rsync -va \
 			  --exclude-from='.gitignore' \
 			  --prune-empty-dirs --copy-links \
-			  -e "ssh -i ~/.ssh/id_rsa -A ${USERNAME}@${PROXY_HOST} ssh" \
 			  ./ \
-              '${USERNAME}@${CLUSTER_HOST}:~/${PROJECT_NAME}/'
+			  ${CLUSTER_HOST_PROFILE}:~/${PROJECT_NAME}/
 
 ## Sync data to local
 .PHONY: sync_data
 sync_data:
-	rsync -va --include='*/' \
-              --exclude='*' --prune-empty-dirs --copy-links \
-			  -e "ssh -i ~/.ssh/id_rsa -A ${USERNAME}@${PROXY_HOST} ssh" \
-              '${USERNAME}@${CLUSTER_HOST}:~/${PROJECT_NAME}/reports/' \
-			  ./reports/
+	rsync \
+		-va  \
+		--include='reports/***' \
+		--include='models/***' \
+		--exclude='*' --prune-empty-dirs --copy-links \
+		'${USERNAME}@${CLUSTER_HOST}:~/${PROJECT_NAME}/' \
+		./
 
 
 ## Lint using flake8 and black (use `make format` to do formatting)
