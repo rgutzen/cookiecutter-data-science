@@ -8,6 +8,8 @@ class project_paths_class:
 
     this_file = Path(inspect.getfile(lambda: None)).resolve()
     project_name = "{{ cookiecutter.repo_name }}"
+    user_name = "{{ cookiecutter.user_name }}"
+    
 
     def __init__(self, working_dir=None):
         if self.iam_on_cluster():
@@ -18,6 +20,11 @@ class project_paths_class:
 
         self.working_dir = working_dir
         self._set_paths(working_dir=working_dir)
+        
+        if self.iam_on_cluster():
+            # do something, e.g. set paths of large folders to scratch partition
+            pass 
+        
         return None
 
     def _set_paths(self, working_dir):
@@ -39,13 +46,16 @@ class project_paths_class:
         self.scripts.data = self.scripts_path / 'data'
         self.scripts.utils = self.scripts_path / 'utils'
         self.scripts.models = self.scripts_path / 'models'
+        self.scripts.configs = self.scripts_path / "configs"
         self.scripts.features = self.scripts_path / 'features'
         self.scripts.workflow = self.scripts_path / 'workflow'
         self.scripts.visualization = self.scripts_path / 'visualization'
         return None
 
     def iam_on_cluster(self):
-        return ('hpc' in os.popen('hostname').read())
+        host_name = os.popen("hostname").read()
+        cluster_names = ["hpc", "log-1", "log-2", "greene"]
+        return any(x in host_name for x in cluster_names)
 
 
 project_paths = project_paths_class()
