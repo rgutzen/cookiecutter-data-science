@@ -89,3 +89,41 @@ def params(*args, config=None, **kwargs):
         return dict_to_cla(param_dict)
 
     return add_output_and_wildcards_to_args
+
+
+_true_set = {"yes", "true", "t", "y", "1"}
+_false_set = {"no", "false", "f", "n", "0"}
+
+def str_to_bool(value, raise_exc=False):
+    if isinstance(value, str):
+        value = value.lower()
+        if value in _true_set:
+            return True
+        if value in _false_set:
+            return False
+    elif isinstance(value, bool):
+        return value
+    if raise_exc:
+        raise ValueError('Expected "%s"' % '", "'.join(_true_set | _false_set))
+    return None
+
+
+def alias_kwargs(**aliases):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            for alias, original in aliases.items():
+                if alias in kwargs and original not in kwargs:
+                    kwargs[original] = kwargs.pop(alias)
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def filter_kwargs(function, kwargs):
+    # Filter the argument names that the function accepts
+    args = inspect.signature(function).parameters.keys()
+    filtered_kwargs = {k: v for k, v in kwargs.items() if k in args}
+    return filtered_kwargs

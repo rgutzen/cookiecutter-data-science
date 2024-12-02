@@ -1,12 +1,4 @@
-from types import SimpleNamespace
-from {{ cookiecutter.module_name }}.project_paths import project_paths
-
-SCRIPTS = project_paths.scripts_path
-
-configfile: SCRIPTS / 'workflow' / 'config.yaml'
-config = SimpleNamespace(**config)
-
-wildcard_constraints:
+include: "snake_utils.smk"
 
 rule all:
     input:

@@ -5,9 +5,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-colormap = dict(V1='#a6cee3', V2='#1f78b4')
-
-
 def save_plot(file_path: Path, dpi: int = 300, **kwargs):
     file_path = Path(file_path)
     file_path.parent.mkdir(exist_ok=True, parents=True)   
